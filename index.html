@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Да или Нет?</title>
+  <script>
+    function sendAnswer(answer) {
+      if (window.Telegram && Telegram.WebApp) {
+        Telegram.WebApp.sendData(answer); // Отправляем 'yes' или 'no'
+        Telegram.WebApp.close(); // Закрываем окно после отправки
+      } else {
+        alert("Это не Telegram WebApp");
+      }
+    }
+
+    window.onload = () => {
+      Telegram.WebApp.ready();
+    };
+  </script>
+</head>
+<body>
+  <h2>Ты согласен?</h2>
+  <button onclick="sendAnswer('yes')">Да</button>
+  <button onclick="sendAnswer('no')">Нет</button>
+</body>
+</html>
