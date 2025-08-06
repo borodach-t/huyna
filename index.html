@@ -7,16 +7,6 @@
     body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
     .word { margin-bottom: 5px; }
     button { margin-top: 20px; padding: 10px 20px; font-size: 16px; }
-    #resultCode {
-      width: 100%;
-      height: 80px;
-      margin-top: 20px;
-      padding: 10px;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      background: #eee;
-      font-family: monospace;
-    }
   </style>
 </head>
 <body>
@@ -26,13 +16,6 @@
     <button type="submit">Завершить тест</button>
   </form>
 
-  <div id="resultContainer" style="display: none;">
-    <h3>Ваш код результата:</h3>
-    <textarea id="resultCode" readonly></textarea>
-    <p>Скопируйте этот код и отправьте его боту.</p>
-    <button onclick="Telegram.WebApp.close()">Закрыть приложение</button>
-  </div>
-
   <script>
     const words = {
       1: ["have", "with", "know", "all", "like", "think", "yes", "go", "now", "see", "look", "very", "want", "time", "more", "thing", "people", "him", "other", "year", "put", "down"],
@@ -40,34 +23,21 @@
       3: ["streamline", "stubble", "shrivel", "pastiche", "discomfit", "sully", "soothsayer", "sedulous", "vibrissae", "uxoricide"]
     };
 
-    // Создаем плоский массив всех слов для получения их индексов
-    const allWordsFlat = [];
+    const list = document.getElementById("wordList");
     Object.entries(words).forEach(([level, wordList]) => {
       wordList.forEach(word => {
-        allWordsFlat.push(word);
+        const div = document.createElement("div");
+        div.className = "word";
+        div.innerHTML = `<label><input type="checkbox" value="${word}"> ${word}</label>`;
+        list.appendChild(div);
       });
-    });
-
-    const list = document.getElementById("wordList");
-    allWordsFlat.forEach(word => {
-      const div = document.createElement("div");
-      div.className = "word";
-      // Используем data-index для хранения индекса слова в allWordsFlat
-      div.innerHTML = `<label><input type="checkbox" value="${word}" data-index="${allWordsFlat.indexOf(word)}"> ${word}</label>`;
-      list.appendChild(div);
     });
 
     document.getElementById("wordForm").onsubmit = (e) => {
       e.preventDefault();
-      const selectedIndices = Array.from(document.querySelectorAll("input[type=checkbox]:checked")).map(cb => cb.dataset.index);
-      
-      const resultCode = document.getElementById("resultCode");
-      resultCode.value = selectedIndices.join(','); // Формируем строку из индексов через запятую
-
-      document.getElementById("wordForm").style.display = 'none';
-      document.getElementById("resultContainer").style.display = 'block';
-
-      // Telegram.WebApp.close(); // Закомментировано, чтобы пользователь мог скопировать код
+      const selected = Array.from(document.querySelectorAll("input[type=checkbox]:checked")).map(cb => cb.value);
+      Telegram.WebApp.sendData(JSON.stringify(selected));
+      Telegram.WebApp.close();
     };
 
     Telegram.WebApp.ready();
