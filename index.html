@@ -23,14 +23,16 @@
       3: ["streamline", "stubble", "shrivel", "pastiche", "discomfit", "sully", "soothsayer", "sedulous", "vibrissae", "uxoricide"]
     };
 
+    // Объединяем все слова в один массив и перемешиваем
+    const allWords = Object.values(words).flat();
+    allWords.sort(() => Math.random() - 0.5);
+
     const list = document.getElementById("wordList");
-    Object.entries(words).forEach(([level, wordList]) => {
-      wordList.forEach(word => {
-        const div = document.createElement("div");
-        div.className = "word";
-        div.innerHTML = `<label><input type="checkbox" value="${word}"> ${word}</label>`;
-        list.appendChild(div);
-      });
+    allWords.forEach(word => {
+      const div = document.createElement("div");
+      div.className = "word";
+      div.innerHTML = `<label><input type="checkbox" value="${word}"> ${word}</label>`;
+      list.appendChild(div);
     });
 
     document.getElementById("wordForm").onsubmit = (e) => {
