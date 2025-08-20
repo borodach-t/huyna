@@ -3,26 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+    .word { margin: 6px 0; }
+    button { margin-top: 20px; padding: 10px 16px; font-size: 16px; }
+  </style>
 </head>
 <body>
-  <h3>Этап 1: Отметь слова, которые ты знаешь</h3>
+  <h2>Этап 1: отметь знакомые слова</h2>
   <form id="form"></form>
-  <button type="submit">Завершить этап 1</button>
-<script>
-const words = ["the","be","with","tomorrow","corner","clever","streamline"];
-const form = document.getElementById("form");
-words.forEach(w=>{
-  const div=document.createElement("div");
-  div.innerHTML=`<label><input type="checkbox" value="${w}"> ${w}</label>`;
-  form.appendChild(div);
-});
-document.querySelector("button").onclick=(e)=>{
-  e.preventDefault();
-  const selected=[...document.querySelectorAll("input:checked")].map(x=>x.value);
-  Telegram.WebApp.sendData(JSON.stringify(selected));
-  Telegram.WebApp.close();
-};
-Telegram.WebApp.ready();
-</script>
+  <button id="submit">Завершить этап 1</button>
+  <script>
+    function qp(k){const s=new URLSearchParams(location.search);return s.get(k)}
+    function getWords(){try{return JSON.parse(decodeURIComponent(qp('w')||'[]'))}catch(e){return []}}
+    const words=getWords()
+    const form=document.getElementById('form')
+    words.forEach(w=>{
+      const div=document.createElement('div')
+      div.className='word'
+      div.innerHTML=`<label><input type="checkbox" value="${w}"> ${w}</label>`
+      form.appendChild(div)
+    })
+    document.getElementById('submit').onclick=(e)=>{
+      e.preventDefault()
+      const selected=[...document.querySelectorAll('input[type=checkbox]:checked')].map(x=>x.value)
+      Telegram.WebApp.sendData(JSON.stringify(selected))
+      Telegram.WebApp.close()
+    }
+    Telegram.WebApp.ready()
+  </script>
 </body>
 </html>
