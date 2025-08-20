@@ -3,46 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
-    .word { margin-bottom: 5px; }
-    button { margin-top: 20px; padding: 10px 20px; font-size: 16px; }
-  </style>
 </head>
 <body>
-  <h2>Отметь слова, которые ты знаешь:</h2>
-  <form id="wordForm">
-    <div id="wordList"></div>
-    <button type="submit">Завершить тест</button>
-  </form>
-
-  <script>
-    const words = {
-      1: ["have", "with", "know", "all", "like", "think", "yes", "go", "now", "see", "look", "very", "want", "time", "more", "thing", "people", "him", "other", "year", "put", "down"],
-      2: ["here", "after", "call", "next", "pay", "enough", "hope", "close", "tomorrow", "box", "hair", "clean", "corner", "skill", "twice", "flow", "clever", "beach", "bury", "hint", "shave", "bat", "clap", "grumble", "wag"],
-      3: ["streamline", "stubble", "shrivel", "pastiche", "discomfit", "sully", "soothsayer", "sedulous", "vibrissae", "uxoricide"]
-    };
-
-    // Объединяем все слова в один массив и перемешиваем
-    const allWords = Object.values(words).flat();
-    allWords.sort(() => Math.random() - 0.5);
-
-    const list = document.getElementById("wordList");
-    allWords.forEach(word => {
-      const div = document.createElement("div");
-      div.className = "word";
-      div.innerHTML = `<label><input type="checkbox" value="${word}"> ${word}</label>`;
-      list.appendChild(div);
-    });
-
-    document.getElementById("wordForm").onsubmit = (e) => {
-      e.preventDefault();
-      const selected = Array.from(document.querySelectorAll("input[type=checkbox]:checked")).map(cb => cb.value);
-      Telegram.WebApp.sendData(JSON.stringify(selected));
-      Telegram.WebApp.close();
-    };
-
-    Telegram.WebApp.ready();
-  </script>
+  <h3>Этап 1: Отметь слова, которые ты знаешь</h3>
+  <form id="form"></form>
+  <button type="submit">Завершить этап 1</button>
+<script>
+const words = ["the","be","with","tomorrow","corner","clever","streamline"];
+const form = document.getElementById("form");
+words.forEach(w=>{
+  const div=document.createElement("div");
+  div.innerHTML=`<label><input type="checkbox" value="${w}"> ${w}</label>`;
+  form.appendChild(div);
+});
+document.querySelector("button").onclick=(e)=>{
+  e.preventDefault();
+  const selected=[...document.querySelectorAll("input:checked")].map(x=>x.value);
+  Telegram.WebApp.sendData(JSON.stringify(selected));
+  Telegram.WebApp.close();
+};
+Telegram.WebApp.ready();
+</script>
 </body>
 </html>
