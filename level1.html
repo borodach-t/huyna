@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+    .word { margin-bottom: 5px; }
+    button { margin-top: 20px; padding: 10px 20px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h2>Отметь знакомые слова (Этап 2 – уровень A1):</h2>
+  <form id="wordForm">
+    <div id="wordList"></div>
+    <button type="submit">Завершить тест</button>
+  </form>
+
+  <script>
+    const words = [
+      "cat","dog","house","milk","sun","tree","car","book","school","food",
+      "red","blue","green","big","small","water","man","woman","child","friend",
+      "apple","banana","table","chair","pen","paper","door","window","street","shop",
+      "day","night","morning","evening","happy","sad","good","bad","work","play",
+      "run","walk","sleep","eat","drink","sit","stand","open","close","help",
+      "love","like","see","hear","speak","read","write","learn","teach","understand",
+      "money","time","life","world","family","hand","head","eye","mouth","foot",
+      "city","village","country","home","room","bed","kitchen","bathroom","garden","road",
+      "summer","winter","spring","autumn","rain","snow","hot","cold","wind","weather",
+      "music","movie","game","sport","train","bus","airport","travel","sea","mountain"
+    ];
+
+    const list = document.getElementById("wordList");
+
+    words.forEach(word => {
+      const div = document.createElement("div");
+      div.className = "word";
+      div.innerHTML = `<label><input type="checkbox" value="${word}"> ${word}</label>`;
+      list.appendChild(div);
+    });
+
+    document.getElementById("wordForm").onsubmit = (e) => {
+      e.preventDefault();
+      const selected = Array.from(
+        document.querySelectorAll("input[type=checkbox]:checked")
+      ).map(cb => cb.value);
+
+      Telegram.WebApp.sendData(JSON.stringify(selected));
+      Telegram.WebApp.close();
+    };
+
+    Telegram.WebApp.ready();
+  </script>
+</body>
+</html>
