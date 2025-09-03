@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+.word { margin-bottom: 5px; }
+button { margin-top: 20px; padding: 10px 20px; font-size: 16px; }
+</style>
+</head>
+<body>
+<h2>Выбери слова, которые знаешь:</h2>
+<form id="wordForm">
+<div id="wordList"></div>
+<button type="submit">Завершить второй этап</button>
+</form>
+
+<script>
+// Пример слов для уровня 1 (100 слов)
+const words = [
+"have","with","know","all","like","think","yes","go","now","see",
+"look","very","want","time","more","thing","people","him","other","year",
+"put","down","up","come","make","take","get","give","find","use",
+"work","need","feel","try","call","ask","keep","help","seem","talk",
+"turn","start","show","move","play","run","live","believe","hold","bring",
+"write","sit","stand","lose","pay","meet","include","continue","set","learn",
+"change","lead","understand","watch","follow","stop","create","speak","read","allow",
+"add","spend","grow","open","walk","win","offer","remember","love","consider",
+"appear","buy","wait","serve","die","send","expect","build","stay","fall"
+];
+
+const list = document.getElementById("wordList");
+words.forEach(word => {
+    const div = document.createElement("div");
+    div.className = "word";
+    div.innerHTML = `<label><input type="checkbox" value="${word}"> ${word}</label>`;
+    list.appendChild(div);
+});
+
+document.getElementById("wordForm").onsubmit = (e) => {
+    e.preventDefault();
+    const selected = Array.from(
+        document.querySelectorAll("input[type=checkbox]:checked")
+    ).map(cb => cb.value);
+    Telegram.WebApp.sendData(JSON.stringify(selected));
+    Telegram.WebApp.close();
+};
+
+Telegram.WebApp.ready();
+</script>
+</body>
+</html>
