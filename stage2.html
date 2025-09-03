@@ -5,38 +5,50 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
-    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-    .col { background: #fff; padding: 12px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
-    .word { margin: 6px 0; }
-    button { margin-top: 20px; padding: 10px 16px; font-size: 16px; }
+    .word { margin-bottom: 5px; }
+    button { margin-top: 20px; padding: 10px 20px; font-size: 16px; }
   </style>
 </head>
 <body>
-  <h2>Этап 2: отметь знакомые слова</h2>
-  <div id="grid" class="grid"></div>
-  <button id="submit">Завершить тест</button>
+  <h2>Этап 2 (A1): Отметь знакомые слова</h2>
+  <form id="wordForm">
+    <div id="wordList"></div>
+    <button type="submit">Завершить тест</button>
+  </form>
+
   <script>
-    function qp(k){const s=new URLSearchParams(location.search);return s.get(k)}
-    function getCols(){try{return JSON.parse(decodeURIComponent(qp('w')||'[]'))}catch(e){return [[],[],[],[]]}}
-    const cols=getCols()
-    const grid=document.getElementById('grid')
-    cols.forEach(col=>{
-      const box=document.createElement('div'); box.className='col'
-      col.forEach(w=>{
-        const div=document.createElement('div')
-        div.className='word'
-        div.innerHTML=`<label><input type="checkbox" value="${w}"> ${w}</label>`
-        box.appendChild(div)
-      })
-      grid.appendChild(box)
-    })
-    document.getElementById('submit').onclick=(e)=>{
-      e.preventDefault()
-      const selected=[...document.querySelectorAll('input[type=checkbox]:checked')].map(x=>x.value)
-      Telegram.WebApp.sendData(JSON.stringify(selected))
-      Telegram.WebApp.close()
-    }
-    Telegram.WebApp.ready()
+    const words = [
+      "cat","dog","house","milk","sun","tree","car","book","school","food",
+      "red","blue","green","big","small","water","man","woman","child","friend",
+      "apple","banana","table","chair","pen","paper","door","window","street","shop",
+      "day","night","morning","evening","happy","sad","good","bad","work","play",
+      "run","walk","sleep","eat","drink","sit","stand","open","close","help",
+      "love","like","see","hear","speak","read","write","learn","teach","understand",
+      "money","time","life","world","family","hand","head","eye","mouth","foot",
+      "city","village","country","home","room","bed","kitchen","bathroom","garden","road",
+      "summer","winter","spring","autumn","rain","snow","hot","cold","wind","weather",
+      "music","movie","game","sport","train","bus","airport","travel","sea","mountain"
+    ];
+
+    const list = document.getElementById("wordList");
+    words.forEach(word => {
+      const div = document.createElement("div");
+      div.className = "word";
+      div.innerHTML = `<label><input type="checkbox" value="${word}"> ${word}</label>`;
+      list.appendChild(div);
+    });
+
+    document.getElementById("wordForm").onsubmit = (e) => {
+      e.preventDefault();
+      const selected = Array.from(
+        document.querySelectorAll("input[type=checkbox]:checked")
+      ).map(cb => cb.value);
+
+      Telegram.WebApp.sendData(JSON.stringify({ stage: 2, words: selected }));
+      Telegram.WebApp.close();
+    };
+
+    Telegram.WebApp.ready();
   </script>
 </body>
 </html>
