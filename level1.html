@@ -10,7 +10,7 @@
   </style>
 </head>
 <body>
-  <h2>Отметь знакомые слова (Этап 2 – уровень A1):</h2>
+  <h2>Этап 2 (A1): Отметь знакомые слова</h2>
   <form id="wordForm">
     <div id="wordList"></div>
     <button type="submit">Завершить тест</button>
@@ -31,7 +31,6 @@
     ];
 
     const list = document.getElementById("wordList");
-
     words.forEach(word => {
       const div = document.createElement("div");
       div.className = "word";
@@ -45,7 +44,7 @@
         document.querySelectorAll("input[type=checkbox]:checked")
       ).map(cb => cb.value);
 
-      Telegram.WebApp.sendData(JSON.stringify(selected));
+      Telegram.WebApp.sendData(JSON.stringify({ stage: 2, words: selected }));
       Telegram.WebApp.close();
     };
 
